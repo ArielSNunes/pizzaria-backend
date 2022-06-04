@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
+import { User } from '@prisma/client'
 import { compare, hash } from 'bcryptjs'
 import { PrismaService } from 'src/db/prisma.service'
 import { AuthDTO, AuthReturnDTO } from './dto/auth.dto'
@@ -44,10 +49,7 @@ export class AuthService {
 		}
 
 		const jwt = this.jwtService.sign(
-			{
-				name: user.name,
-				email: user.email,
-			},
+			{ name: user.name, email: user.email },
 			{
 				subject: user.id,
 				expiresIn: '1d',
@@ -61,5 +63,26 @@ export class AuthService {
 			name: user.name,
 			id: user.id,
 		}
+	}
+
+	async validateAuth(jwt: string): Promise<Partial<User>> {
+		const { sub } = this.jwtService.verify<{ sub: string }>(jwt, {
+			secret: this.configService.get('AUTH_SECRET'),
+		})
+
+		if (!sub) {
+			throw new UnauthorizedException('Usuário não autorizado')
+		}
+
+		const user = await this.prismaClient.user.findFirst({
+			where: { id: sub },
+			select: { id: true },
+		})
+
+		if (!user) {
+			throw new UnauthorizedException('Usuário não autorizado')
+		}
+
+		return user
 	}
 }
