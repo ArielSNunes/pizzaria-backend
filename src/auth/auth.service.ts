@@ -5,7 +5,7 @@ import { AuthDto } from './dto/auth.dto'
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly prismaClient: PrismaService) { }
+	constructor(private readonly prismaClient: PrismaService) {}
 	async passwordHash(password: string): Promise<string> {
 		return await hash(password, 8)
 	}
