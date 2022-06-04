@@ -11,6 +11,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware'
 import { AuthService } from './auth/auth.service'
 import { PrismaService } from './db/prisma.service'
 import { JwtService } from '@nestjs/jwt'
+import { CategoryModule } from './category/categories.module'
 
 @Module({
 	imports: [
@@ -19,15 +20,18 @@ import { JwtService } from '@nestjs/jwt'
 		}),
 		UsersModule,
 		AuthModule,
+		CategoryModule,
 	],
 	controllers: [],
 	providers: [PrismaService, JwtService, AuthService],
 })
 export class AppModule implements NestModule {
 	async configure(consumer: MiddlewareConsumer): Promise<void> {
-		consumer.apply(AuthMiddleware).forRoutes({
-			method: RequestMethod.GET,
-			path: '/users/me',
-		})
+		consumer
+			.apply(AuthMiddleware)
+			.forRoutes(
+				{ method: RequestMethod.GET, path: '/users/me' },
+				{ method: RequestMethod.POST, path: '/categories' },
+			)
 	}
 }
