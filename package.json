@@ -29,7 +29,9 @@
     "prisma": "3.14.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "zod": "3.17.3",
+    "zod-prisma": "0.5.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
