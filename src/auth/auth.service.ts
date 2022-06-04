@@ -1,11 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
 import { compare, hash } from 'bcryptjs'
 import { PrismaService } from 'src/db/prisma.service'
-import { AuthDto } from './dto/auth.dto'
+import { AuthDTO, AuthReturnDTO } from './dto/auth.dto'
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly prismaClient: PrismaService) {}
+	constructor(
+		private readonly prismaClient: PrismaService,
+		private readonly jwtService: JwtService,
+		private readonly configService: ConfigService,
+	) {}
 	async passwordHash(password: string): Promise<string> {
 		return await hash(password, 8)
 	}
@@ -15,10 +21,12 @@ export class AuthService {
 	): Promise<boolean> {
 		return compare(password, hashedPassword)
 	}
-	async auth({ email, password }: AuthDto) {
+
+	async auth({ email, password }: AuthDTO): Promise<AuthReturnDTO> {
 		const user = await this.prismaClient.user.findFirst({
 			where: { email },
 			select: {
+				name: true,
 				email: true,
 				password: true,
 				id: true,
@@ -35,6 +43,23 @@ export class AuthService {
 			throw new NotFoundException('Usuário ou senha incorretos')
 		}
 
-		return true
+		const jwt = this.jwtService.sign(
+			{
+				name: user.name,
+				email: user.email,
+			},
+			{
+				subject: user.id,
+				expiresIn: '1d',
+				secret: this.configService.get('AUTH_SECRET'),
+			},
+		)
+
+		return {
+			token: jwt,
+			email: user.email,
+			name: user.name,
+			id: user.id,
+		}
 	}
 }
