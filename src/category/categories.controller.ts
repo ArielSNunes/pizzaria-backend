@@ -4,7 +4,7 @@ import { CreateCategoryDTO } from './dto/create-category.dto'
 
 @Controller('categories')
 export class CategoriesController {
-	constructor(private readonly categoryService: CategoriesService) {}
+	constructor(private readonly categoryService: CategoriesService) { }
 
 	@Post()
 	async create(@Body() createCategoryDto: CreateCategoryDTO) {
