@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { User } from '@prisma/client'
+import { hash } from 'bcryptjs'
+import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/db/prisma.service'
 import { CreateUserDTO } from './dto/create-user.dto'
 
 @Injectable()
 export class UsersService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(
+		private readonly prismaService: PrismaService,
+		private readonly authService: AuthService,
+	) {}
 
 	async create(createUserDto: CreateUserDTO): Promise<Partial<User> | false> {
 		const userExists = await this.findByEmail(createUserDto.email)
@@ -13,6 +18,9 @@ export class UsersService {
 		if (userExists) {
 			return false
 		}
+		createUserDto.password = await this.authService.passwordHash(
+			createUserDto.password,
+		)
 
 		const user = await this.prismaService.user.create({
 			data: createUserDto,
