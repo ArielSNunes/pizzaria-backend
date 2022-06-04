@@ -1,9 +1,19 @@
+import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule)
-	await app.listen(3001)
+
+	app.useGlobalPipes(
+		new ValidationPipe({
+			transform: true,
+			always: true,
+			errorHttpStatusCode: 422,
+		}),
+	)
+
+	await app.listen(3003)
 }
 bootstrap()
