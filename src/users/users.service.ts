@@ -43,8 +43,15 @@ export class UsersService {
 		return `This action returns all users`
 	}
 
-	async findOne(id: string) {
-		return `This action returns a #${id} user`
+	async findOne(id: string): Promise<Partial<User>> {
+		return await this.prismaService.user.findFirst({
+			where: { id },
+			select: {
+				name: true,
+				email: true,
+				createdAt: true,
+			},
+		})
 	}
 
 	async update(id: string) {

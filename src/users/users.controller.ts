@@ -7,8 +7,10 @@ import {
 	Param,
 	Delete,
 	UnprocessableEntityException,
+	Req,
 } from '@nestjs/common'
 import { User } from '@prisma/client'
+import { Request } from 'express'
 import { CreateUserDTO } from './dto/create-user.dto'
 import { UsersService } from './users.service'
 
@@ -32,9 +34,9 @@ export class UsersController {
 		return this.usersService.findAll()
 	}
 
-	@Get(':id')
-	async findOne(@Param('id') id: string) {
-		return this.usersService.findOne(id)
+	@Get('me')
+	async findOne(@Req() req: Request): Promise<Partial<User>> {
+		return this.usersService.findOne(req.userId)
 	}
 
 	@Patch(':id')
