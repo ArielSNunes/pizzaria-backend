@@ -7,9 +7,7 @@ import { CreateUserDTO } from './dto/create-user.dto'
 export class UsersService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async create(
-		createUserDto: CreateUserDTO,
-	): Promise<Partial<User> | boolean> {
+	async create(createUserDto: CreateUserDTO): Promise<Partial<User> | false> {
 		const userExists = await this.findByEmail(createUserDto.email)
 
 		if (userExists) {

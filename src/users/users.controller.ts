@@ -19,12 +19,12 @@ export class UsersController {
 	@Post()
 	async create(
 		@Body() createUserDto: CreateUserDTO,
-	): Promise<Partial<User> | boolean> {
+	): Promise<Partial<User> | false> {
 		const createdUser = await this.usersService.create(createUserDto)
 		if (!createdUser) {
 			throw new UnprocessableEntityException('E-mail já cadastrado')
 		}
-		return createUserDto
+		return createdUser
 	}
 
 	@Get()
