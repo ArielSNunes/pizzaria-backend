@@ -26,10 +26,25 @@ export class CategoriesService {
 
 		return category
 	}
-	public async findByName(name: string) {
+
+	public async findByName(name: string): Promise<Category> {
 		const category = await this.prismaService.category.findFirst({
 			where: { name },
 		})
 		return category
+	}
+
+	public async findAll(): Promise<Partial<Category>[]> {
+		const categories = await this.prismaService.category.findMany({
+			select: {
+				id: true,
+				name: true,
+			},
+			orderBy: {
+				createdAt: 'asc',
+			},
+		})
+
+		return categories
 	}
 }
