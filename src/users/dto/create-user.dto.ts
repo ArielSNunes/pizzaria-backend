@@ -10,14 +10,10 @@ export class CreateUserDTO {
 
 	@IsNotEmpty({ message: 'O campo email deve ser informado' })
 	@IsEmail({}, { message: 'E-mail com formato inválido' })
-	@ApiProperty({
-		description: 'E-mail do usuário sendo criado',
-	})
+	@ApiProperty({ description: 'E-mail do usuário sendo criado' })
 	email: string
 
 	@IsNotEmpty({ message: 'O campo password deve ser informado' })
-	@ApiProperty({
-		description: 'Senha do usuário sendo criado',
-	})
+	@ApiProperty({ description: 'Senha do usuário sendo criado' })
 	password: string
 }
