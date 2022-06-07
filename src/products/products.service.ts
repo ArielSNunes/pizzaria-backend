@@ -1,13 +1,32 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common'
+import {
+	Inject,
+	Injectable,
+	UnprocessableEntityException,
+} from '@nestjs/common'
 import { Product } from '@prisma/client'
 import { PrismaService } from 'src/db/prisma.service'
-import { CreateProductDTO } from './dto/create-product.dto'
+import { CreateDbProductDTO } from './dto/create-product.dto'
 
 @Injectable()
 export class ProductsService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async create(createProductDto: CreateProductDTO) {
+	async updateBanner(id: string, banner: string) {
+		return await this.prismaService.product.update({
+			where: { id },
+			data: { banner },
+			select: {
+				id: true,
+				name: true,
+				category: true,
+				categoryId: true,
+				price: true,
+				description: true,
+				banner: true,
+			},
+		})
+	}
+	async create(createProductDto: CreateDbProductDTO) {
 		const previousProduct = await this.findByName(createProductDto.name)
 
 		if (previousProduct) {

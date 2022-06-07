@@ -13,6 +13,7 @@ import { PrismaService } from './db/prisma.service'
 import { JwtService } from '@nestjs/jwt'
 import { CategoryModule } from './category/categories.module'
 import { ProductsModule } from './products/products.module'
+import { CloudinaryModule } from './cloudinary/cloudinary.module'
 
 @Module({
 	imports: [
@@ -23,6 +24,7 @@ import { ProductsModule } from './products/products.module'
 		AuthModule,
 		CategoryModule,
 		ProductsModule,
+		CloudinaryModule.forRoot(),
 	],
 	controllers: [],
 	providers: [PrismaService, JwtService, AuthService],
