@@ -17,7 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Express } from 'express'
 import { Multer } from 'multer'
 import { CloudinaryProvider } from 'src/cloudinary/cloudinary.provider'
-import { CreateDbProductDTO, CreateProductDTO } from './dto/create-product.dto'
+import { CreateProductDTO } from './dto/create-product.dto'
 import { ProductsService } from './products.service'
 
 @Controller('products')
@@ -34,22 +34,13 @@ export class ProductsController {
 		@Body() createProductDto: CreateProductDTO,
 		@UploadedFile() file: Express.Multer.File,
 	) {
+		const uploadedFile = await this.cloudinaryProvider
+			.getService()
+			.uploadFile(file)
 		const product = await this.productService.create({
 			...createProductDto,
-			banner: '',
+			banner: uploadedFile.secure_url,
 		})
-		try {
-			const uploadedFile = await this.cloudinaryProvider
-				.getService()
-				.uploadFile(file)
-
-			const updatedProduct = await this.productService.updateBanner(
-				product.id,
-				uploadedFile.secure_url,
-			)
-			return updatedProduct
-		} catch (error) {
-			throw new InternalServerErrorException('Erro ao salvar imagem')
-		}
+		return product
 	}
 }
