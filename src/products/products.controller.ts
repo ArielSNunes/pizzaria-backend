@@ -9,6 +9,7 @@ import {
 	UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBearerAuth } from '@nestjs/swagger'
 import { Express } from 'express'
 import { Multer } from 'multer'
 import { CloudinaryProvider } from 'src/cloudinary/cloudinary.provider'
@@ -25,6 +26,7 @@ export class ProductsController {
 
 	@Post()
 	@UseInterceptors(FileInterceptor('banner'))
+	@ApiBearerAuth('Authorization')
 	async create(
 		@Body() createProductDto: CreateProductDTO,
 		@UploadedFile() file: Express.Multer.File,
@@ -40,6 +42,7 @@ export class ProductsController {
 	}
 
 	@Get('/:category')
+	@ApiBearerAuth('Authorization')
 	async listByCategory(@Param('category') categoryId: string) {
 		return await this.productService.findByCategory(categoryId)
 	}

@@ -9,6 +9,7 @@ import {
 	UnprocessableEntityException,
 	Req,
 } from '@nestjs/common'
+import { ApiBearerAuth } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Request } from 'express'
 import { CreateUserDTO } from './dto/create-user.dto'
@@ -35,6 +36,7 @@ export class UsersController {
 	}
 
 	@Get('me')
+	@ApiBearerAuth('Authorization')
 	async findOne(@Req() req: Request): Promise<Partial<User>> {
 		return this.usersService.findOne(req.userId)
 	}
