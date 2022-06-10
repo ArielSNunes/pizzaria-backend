@@ -1,18 +1,13 @@
 import {
 	Body,
 	Controller,
+	Get,
 	Inject,
-	InternalServerErrorException,
+	Param,
 	Post,
 	UploadedFile,
 	UseInterceptors,
 } from '@nestjs/common'
-import {
-	ConfigOptions,
-	UploadApiErrorResponse,
-	UploadApiResponse,
-	v2,
-} from 'cloudinary'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Express } from 'express'
 import { Multer } from 'multer'
@@ -42,5 +37,10 @@ export class ProductsController {
 			banner: uploadedFile.secure_url,
 		})
 		return product
+	}
+
+	@Get('/:category')
+	async listByCategory(@Param('category') categoryId: string) {
+		return await this.productService.findByCategory(categoryId)
 	}
 }

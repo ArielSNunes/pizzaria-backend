@@ -1,8 +1,4 @@
-import {
-	Inject,
-	Injectable,
-	UnprocessableEntityException,
-} from '@nestjs/common'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { Product } from '@prisma/client'
 import { PrismaService } from 'src/db/prisma.service'
 import { CreateDbProductDTO } from './dto/create-product.dto'
@@ -55,6 +51,24 @@ export class ProductsService {
 			select: {
 				id: true,
 				name: true,
+			},
+		})
+	}
+
+	async findByCategory(categoryId: string) {
+		return await this.prismaService.product.findMany({
+			where: { categoryId },
+			select: {
+				id: true,
+				banner: true,
+				category: {
+					select: {
+						name: true,
+					},
+				},
+				description: true,
+				name: true,
+				price: true,
 			},
 		})
 	}
