@@ -30,24 +30,9 @@ export class UsersController {
 		return createdUser
 	}
 
-	@Get()
-	async findAll() {
-		return this.usersService.findAll()
-	}
-
 	@Get('me')
 	@ApiBearerAuth('Authorization')
 	async findOne(@Req() req: Request): Promise<Partial<User>> {
 		return this.usersService.findOne(req.userId)
-	}
-
-	@Patch(':id')
-	async update(@Param('id') id: string) {
-		return this.usersService.update(id)
-	}
-
-	@Delete(':id')
-	async remove(@Param('id') id: string) {
-		return this.usersService.remove(id)
 	}
 }

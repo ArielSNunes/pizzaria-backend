@@ -39,9 +39,6 @@ export class UsersService {
 			where: { email },
 		})
 	}
-	async findAll() {
-		return `This action returns all users`
-	}
 
 	async findOne(id: string): Promise<Partial<User>> {
 		return await this.prismaService.user.findFirst({
@@ -52,13 +49,5 @@ export class UsersService {
 				createdAt: true,
 			},
 		})
-	}
-
-	async update(id: string) {
-		return `This action updates a #${id} user`
-	}
-
-	async remove(id: string) {
-		return `This action removes a #${id} user`
 	}
 }
