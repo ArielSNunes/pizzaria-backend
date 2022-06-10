@@ -14,6 +14,10 @@ import { JwtService } from '@nestjs/jwt'
 import { CategoryModule } from './category/categories.module'
 import { ProductsModule } from './products/products.module'
 import { CloudinaryModule } from './cloudinary/cloudinary.module'
+import { OrdersModule } from './orders/orders.module'
+import { OrdersController } from './orders/orders.controller'
+import { ProductsController } from './products/products.controller'
+import { CategoriesController } from './category/categories.controller'
 
 @Module({
 	imports: [
@@ -25,6 +29,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module'
 		CategoryModule,
 		ProductsModule,
 		CloudinaryModule.forRoot(),
+		OrdersModule,
 	],
 	controllers: [],
 	providers: [PrismaService, JwtService, AuthService],
@@ -35,8 +40,9 @@ export class AppModule implements NestModule {
 			.apply(AuthMiddleware)
 			.forRoutes(
 				{ method: RequestMethod.GET, path: '/users/me' },
-				'/categories',
-				'/products(/.*)?',
+				CategoriesController,
+				ProductsController,
+				OrdersController,
 			)
 	}
 }
