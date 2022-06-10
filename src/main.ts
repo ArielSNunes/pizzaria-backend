@@ -16,9 +16,17 @@ async function bootstrap() {
 	)
 
 	const swaggerConfig = new DocumentBuilder()
+		.addTag('Pizzaria')
 		.setTitle('API - Pizzaria')
 		.setDescription('Documentação da API de Pizzaria')
-		.addTag('Pizzaria')
+		.setVersion('1.0')
+		.addBearerAuth(
+			{
+				bearerFormat: 'JWT',
+				type: 'http',
+			},
+			'Authorization',
+		)
 		.build()
 
 	const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
