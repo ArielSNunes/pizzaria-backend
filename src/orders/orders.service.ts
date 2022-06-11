@@ -50,4 +50,22 @@ export class OrdersService {
 			data: orderItem,
 		})
 	}
+
+	async removeItemFromOrder(orderItem: string) {
+		const item = await this.prismaService.orderItem.findFirst({
+			where: {
+				id: orderItem,
+			},
+		})
+
+		if (!item) {
+			throw new NotAcceptableException('Item não identificado no pedido')
+		}
+
+		return await this.prismaService.orderItem.delete({
+			where: {
+				id: orderItem,
+			},
+		})
+	}
 }

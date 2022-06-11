@@ -14,6 +14,12 @@ export class OrdersController {
 		return await this.ordersService.create(createOrderDto)
 	}
 
+	@Delete('/item/:itemId')
+	@ApiBearerAuth('Authorization')
+	async removeItem(@Param('itemId') orderItem: string) {
+		return await this.ordersService.removeItemFromOrder(orderItem)
+	}
+
 	@Delete('/:orderId')
 	@ApiBearerAuth('Authorization')
 	async clearOrder(@Param('orderId') orderId: string) {
