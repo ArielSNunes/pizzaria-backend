@@ -3,9 +3,6 @@ import {
 	Get,
 	Post,
 	Body,
-	Patch,
-	Param,
-	Delete,
 	UnprocessableEntityException,
 	Req,
 } from '@nestjs/common'

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
 import { CreateOrderDTO } from './dto/create-order.dto'
 import { OrdersService } from './orders.service'
@@ -11,5 +11,10 @@ export class OrdersController {
 	@ApiBearerAuth('Authorization')
 	async create(@Body() createOrderDto: CreateOrderDTO) {
 		return await this.ordersService.create(createOrderDto)
+	}
+
+	@Delete('/:orderId')
+	async clearOrder(@Param('orderId') orderId: string) {
+		return await this.ordersService.deleteOrder(orderId)
 	}
 }
