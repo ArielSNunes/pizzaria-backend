@@ -89,7 +89,6 @@ export class OrdersService {
 			orderBy: {
 				createdAt: 'desc',
 			},
-			include: { items: true },
 		})
 	}
 }
