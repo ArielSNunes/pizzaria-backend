@@ -123,4 +123,15 @@ export class OrdersService {
 			},
 		})
 	}
+
+	async finishOrder(orderId: string) {
+		const order = await this.findOrder(orderId)
+		if (!order) {
+			throw new NotAcceptableException('Pedido não encontrado')
+		}
+		return await this.prismaService.order.update({
+			where: { id: orderId },
+			data: { status: true },
+		})
+	}
 }

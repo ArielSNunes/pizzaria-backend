@@ -49,4 +49,10 @@ export class OrdersController {
 	async listOrderItems(@Param('orderId') orderId: string) {
 		return await this.ordersService.listOrderItem(orderId)
 	}
+
+	@Post('/finish')
+	@ApiBearerAuth('Authorization')
+	async finishOrder(@Body('orderId') orderId: string) {
+		return await this.ordersService.finishOrder(orderId)
+	}
 }
