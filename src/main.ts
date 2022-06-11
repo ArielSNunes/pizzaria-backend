@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
@@ -14,6 +15,7 @@ async function bootstrap() {
 			errorHttpStatusCode: 422,
 		}),
 	)
+	const appConfigs = app.get(ConfigService)
 
 	const swaggerConfig = new DocumentBuilder()
 		.addTag('Pizzaria')
@@ -32,6 +34,8 @@ async function bootstrap() {
 	const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
 	SwaggerModule.setup('docs', app, swaggerDocument)
 
-	await app.listen(3003)
+	const appPort = appConfigs.get('APP_PORT', 3003)
+
+	await app.listen(appPort)
 }
 bootstrap()
