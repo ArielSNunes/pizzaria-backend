@@ -46,6 +46,24 @@ export class OrdersService {
 			throw new NotAcceptableException('Produto não encontrado')
 		}
 
+		const orderItemExists = await this.prismaService.orderItem.findFirst({
+			where: {
+				orderId: orderItem.orderId,
+				productId: orderItem.productId,
+			},
+		})
+
+		if (orderItemExists) {
+			return await this.prismaService.orderItem.update({
+				where: {
+					id: orderItemExists.id,
+				},
+				data: {
+					amount: orderItemExists.amount + orderItem.amount,
+				},
+			})
+		}
+
 		return await this.prismaService.orderItem.create({
 			data: orderItem,
 		})
@@ -88,6 +106,20 @@ export class OrdersService {
 			},
 			orderBy: {
 				createdAt: 'desc',
+			},
+		})
+	}
+
+	async listOrderItem(orderId: string) {
+		const order = await this.findOrder(orderId)
+		if (!order) {
+			throw new NotAcceptableException('Pedido não encontrado')
+		}
+		return await this.prismaService.orderItem.findMany({
+			where: { orderId },
+			include: {
+				order: true,
+				product: true,
 			},
 		})
 	}

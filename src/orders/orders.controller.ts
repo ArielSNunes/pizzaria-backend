@@ -43,4 +43,10 @@ export class OrdersController {
 	async startOrderPrep(@Body('orderId') orderId: string) {
 		return await this.ordersService.startOrder(orderId)
 	}
+
+	@Get('/:orderId/detail')
+	@ApiBearerAuth('Authorization')
+	async listOrderItems(@Param('orderId') orderId: string) {
+		return await this.ordersService.listOrderItem(orderId)
+	}
 }
