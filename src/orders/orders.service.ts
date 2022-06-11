@@ -68,4 +68,28 @@ export class OrdersService {
 			},
 		})
 	}
+
+	async startOrder(orderId: string) {
+		const order = await this.findOrder(orderId)
+		if (!order) {
+			throw new NotAcceptableException('Pedido não encontrado')
+		}
+		return await this.prismaService.order.update({
+			where: { id: orderId },
+			data: { draft: false },
+		})
+	}
+
+	async listStartedOrders() {
+		return await this.prismaService.order.findMany({
+			where: {
+				draft: false,
+				status: false,
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+			include: { items: true },
+		})
+	}
 }
