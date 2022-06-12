@@ -39,13 +39,13 @@ export class AuthService {
 		})
 
 		if (!user) {
-			throw new NotFoundException('Usuário ou senha incorretos')
+			throw new UnauthorizedException('Usuário ou senha incorretos')
 		}
 
 		const validPassword = await this.passwordVerify(password, user.password)
 
 		if (!validPassword) {
-			throw new NotFoundException('Usuário ou senha incorretos')
+			throw new UnauthorizedException('Usuário ou senha incorretos')
 		}
 
 		const jwt = this.jwtService.sign(
